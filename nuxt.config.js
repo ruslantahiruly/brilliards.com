@@ -1,3 +1,4 @@
+const axios = require('axios');
 
 export default {
   /*
@@ -68,18 +69,16 @@ export default {
     '@nuxtjs/style-resources',
     'nuxt-fontawesome',
     'cookie-universal-nuxt',
+    '@nuxtjs/sitemap',
   ],
-
   styleResources: {
     scss: ['~/assets/sass/*.scss'],
   },
-
   buefy: {
     materialDesignIcons: false,
     defaultIconPack: 'fas',
     defaultIconComponent: 'font-awesome-icon'
   },
-
   fontawesome: {
     imports: [
       {
@@ -92,9 +91,17 @@ export default {
       }
     ]
   },
-
   axios: {
-    baseURL: 'http://localhost:8000/api'
+    baseURL: process.env.BASE_URL,
+  },
+  sitemap: {
+    exclude: [
+      '/about',
+    ],
+    routes: async () => {
+      const { data } = await axios.get(`${process.env.BASE_URL}/sitemap-clubs/`);
+      return data.map((club) => `/${club.city.url}/clubs/${club.slug}`);
+    }
   },
   /*
   ** Build configuration
