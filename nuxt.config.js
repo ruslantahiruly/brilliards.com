@@ -48,6 +48,7 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
+    '~/plugins/buefy.js',
   ],
   /*
   ** Auto import components
@@ -58,26 +59,20 @@ export default {
   ** Nuxt.js dev-modules
   */
   buildModules: [
-    '@nuxt/typescript-build'
+    '@nuxt/typescript-build',
+    '@nuxtjs/style-resources',
   ],
   /*
   ** Nuxt.js modules
   */
   modules: [
     '@nuxtjs/axios',
-    'nuxt-buefy',
-    '@nuxtjs/style-resources',
     'nuxt-fontawesome',
     'cookie-universal-nuxt',
     '@nuxtjs/sitemap',
   ],
   styleResources: {
-    scss: ['~/assets/sass/*.scss'],
-  },
-  buefy: {
-    materialDesignIcons: false,
-    defaultIconPack: 'fas',
-    defaultIconComponent: 'font-awesome-icon'
+    scss: ['~/assets/sass/vars.scss'],
   },
   fontawesome: {
     imports: [

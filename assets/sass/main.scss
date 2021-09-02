@@ -142,8 +142,31 @@ $navbar-item-hover-color: $grey-dark;
 $navbar-item-hover-background-color: $white;
 
 // Import Bulma and Buefy styles
-@import "~bulma";
-@import "~buefy/src/scss/buefy";
+@import "~bulma/sass/base/_all";
+@import "~bulma/sass/helpers/_all";
+@import "~bulma/sass/elements/box";
+@import "~bulma/sass/elements/button";
+@import "~bulma/sass/elements/container";
+@import "~bulma/sass/elements/content";
+@import "~bulma/sass/elements/icon";
+@import "~bulma/sass/elements/image";
+@import "~bulma/sass/elements/table";
+@import "~bulma/sass/elements/title";
+@import "~bulma/sass/form/shared";
+@import "~bulma/sass/components/card";
+@import "~bulma/sass/components/navbar";
+@import "~bulma/sass/components/modal";
+@import "~bulma/sass/components/media";
+@import "~bulma/sass/grid/_all";
+@import "~bulma/sass/layout/_all";
+@import "~bulma/sass/helpers/_all";
+
+@import "~buefy/src/scss/utils/_all";
+@import "~buefy/src/scss/components/_carousel";
+@import "~buefy/src/scss/components/_navbar";
+@import "~buefy/src/scss/components/_table";
+@import "~buefy/src/scss/components/_icon";
+@import "~buefy/src/scss/components/_modal";
 
 // Responsiveness
 @include mobile {
