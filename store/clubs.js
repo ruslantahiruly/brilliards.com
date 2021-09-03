@@ -1,21 +1,29 @@
 export const state = () => ({
   clubs: [],
+  indexClubs: [],
 });
 
 export const mutations = {
   setClubs(state, clubs) {
     state.clubs = clubs;
   },
+  setIndexClubs(state, indexClubs) {
+    state.indexClubs = indexClubs;
+  },
 };
 
 export const actions = {
-  async fetchClubs({commit}, city) {
-    const clubs = await this.$axios.$get(`/clubs/?city=${city}`);
+  async fetchClubs({commit}, params) {
+    const clubs = await this.$axios.$get(`/card-clubs/?city=${params.city}&quantity=${params.quantity}`);
     commit('setClubs', clubs);
+  },
+  async fetchIndexClubs({commit}, params) {
+    const indexClubs = await this.$axios.$get(`/card-clubs/?city=${params.city}&quantity=${params.quantity}`);
+    commit('setIndexClubs', indexClubs);
   },
 };
 
 export const getters = {
   clubs: s => s.clubs,
-  lastClubs: s => s.clubs.slice(Math.max(s.clubs.length - 3, 0)),
+  indexClubs: s => s.indexClubs,
 };

@@ -12,7 +12,7 @@
         <h2 class="title is-size-7-mobile is-size-7-tablet is-size-6-desktop has-text-grey-dark has-text-weight-light has-text-centered has-text-left-mobile mb-5 px-4">Бильярдные клубы {{ ofCurrentCity }}</h2>
         <div class="columns is-multiline is-variable is-0-mobile">
           <ClubCard
-            v-for="club in lastClubs"
+            v-for="club in indexClubs"
             :key="club.id"
             :club="club" 
           />
@@ -53,16 +53,19 @@ export default {
       await this.$store.dispatch('cities/fetchCities');
     }
     
-    if (this.$store.getters['clubs/clubs'].length === 0) {
-      await this.$store.dispatch('clubs/fetchClubs', this.currentCity.url);
+    if (this.$store.getters['clubs/indexClubs'].length === 0) {
+      await this.$store.dispatch('clubs/fetchIndexClubs', {
+        city: this.currentCity.url,
+        quantity: 3,
+      });
     }
   },
   computed: {
     cities() {
       return this.$store.getters['cities/cities'];
     },
-    lastClubs() {
-      return this.$store.getters['clubs/lastClubs'];
+    indexClubs() {
+      return this.$store.getters['clubs/indexClubs'];
     },
     currentCity() {
       return this.$store.getters.currentCity;

@@ -78,12 +78,12 @@ export default {
     imports: [
       {
         set: '@fortawesome/free-solid-svg-icons',
-        icons: ['fas']
+        icons: ['faLocationArrow', 'faMapMarkerAlt', 'faWifi', 'faTv', 'faUtensils', 'faGlassWhiskey', 'faUserShield', 'faSmoking', 'faFan', 'faRestroom', 'faParking', 'faHatCowboy', 'faPhoneAlt', 'faClock', 'faArrowUp', 'faAngleLeft', 'faAngleRight',]
       },
-      {
-        set: '@fortawesome/free-brands-svg-icons',
-        icons: ['fab']
-      }
+      // {
+      //   set: '@fortawesome/free-brands-svg-icons',
+      //   icons: ['fab']
+      // }
     ]
   },
   axios: {

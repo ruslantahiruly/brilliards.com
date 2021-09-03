@@ -35,7 +35,10 @@ export default {
     }
     
     if (this.$store.getters['clubs/clubs'].length === 0) {
-      await this.$store.dispatch('clubs/fetchClubs', this.$route.params.city);
+      await this.$store.dispatch('clubs/fetchClubs', {
+        city: this.currentCity.url,
+        quantity: 0,
+      });
     }
   },
   computed: {
