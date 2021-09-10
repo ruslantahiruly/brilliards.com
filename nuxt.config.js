@@ -90,8 +90,9 @@ export default {
     baseURL: process.env.BASE_URL,
   },
   sitemap: {
+    hostname: 'https://brilliards.com',
     exclude: [
-      '/about/',
+      '/about',
     ],
     routes: async () => {
       const { data } = await axios.get(`${process.env.BASE_URL}/sitemap-clubs/`);
