@@ -92,7 +92,7 @@ export default {
   sitemap: {
     hostname: 'https://brilliards.com',
     defaults: {
-      changefreq: 'weekly',
+      changefreq: 'daily',
       priority: 0.8,
     },
     exclude: [
