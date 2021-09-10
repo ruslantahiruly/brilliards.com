@@ -127,6 +127,37 @@
                   </div>
                 </div>
               </div>
+              <div class="media">
+                <div class="columns">
+                  <div class="column" v-for="social in socials" :key="social.id">
+                    <template v-if="social.name === 'IN'">
+                      <a :href="social.address" title="Instagram" rel="nofollow" target="_blank">
+                        <b-icon pack="fab" icon="instagram" type="is-info" size="is-medium"></b-icon>
+                      </a>
+                    </template>
+                    <template v-if="social.name === 'VK'">
+                      <a :href="social.address" title="Вконтакте" rel="nofollow" target="_blank">
+                        <b-icon pack="fab" icon="vk" type="is-info" size="is-medium"></b-icon>
+                      </a>
+                    </template>
+                    <template v-if="social.name === 'FB'">
+                      <a :href="social.address" title="Facebook" rel="nofollow" target="_blank">
+                        <b-icon pack="fab" icon="facebook-f" type="is-info" size="is-medium"></b-icon>
+                      </a>
+                    </template>
+                    <template v-if="social.name === 'OK'">
+                      <a :href="social.address" title="Одноклассники" rel="nofollow" target="_blank">
+                        <b-icon pack="fab" icon="odnoklassniki" type="is-info" size="is-medium"></b-icon>
+                      </a>
+                    </template>
+                  </div>
+                  <div class="column" v-if="club.website">
+                    <a :href="club.website" title="Официальный сайт" rel="nofollow" target="_blank">
+                      <b-icon pack="fas" icon="globe" type="is-info" size="is-medium"></b-icon>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </section>
           </div>
         </div>
@@ -264,7 +295,23 @@ export default {
           };
         }
       }
-    }
+    },
+    socials() {
+      if (this.club.social_networks.length) {
+        let socials = [];
+
+        for (let i = 0; i < this.club.social_networks.length; i++) {
+          let social = {
+            name: this.club.social_networks[i].name,
+            address: this.club.social_networks[i].address,
+          };
+
+          socials.push(social);
+        }
+
+        return socials;
+      }
+    },
   },
 }
 </script>

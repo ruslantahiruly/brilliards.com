@@ -27,7 +27,7 @@
         </button>
         <b-modal v-model="isModalActive" scroll="keep" :width="350">
           <div class="box">
-            <h4 class="title is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-grey has-text-weight-medium p-3 mb-0">Выбор города</h4>
+            <h4 class="title is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-grey has-text-weight-medium p-3 mb-0">Выберите город</h4>
             <ul>
               <li @click.prevent="changeCity(city)" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop p-1 pl-4" v-for="city in cities" :key="city.id">
                 {{ city.name }}
