@@ -91,11 +91,11 @@ export default {
   },
   sitemap: {
     exclude: [
-      '/about',
+      '/about/',
     ],
     routes: async () => {
       const { data } = await axios.get(`${process.env.BASE_URL}/sitemap-clubs/`);
-      return data.map((club) => `/${club.city.url}/clubs/${club.slug}`);
+      return data.map((club) => `/${club.city.url}/clubs/${club.slug}/`);
     }
   },
   /*
@@ -109,5 +109,8 @@ export default {
   */
   loading: { 
     color: '#f00',
+  },
+  router: {
+    prefetchLinks: false,
   },
 }
