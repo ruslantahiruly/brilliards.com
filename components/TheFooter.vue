@@ -1,7 +1,7 @@
 <template>
   <footer class="footer is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey mt-6">
     <div class="container is-max-widescreen">
-      <div class="columns">
+      <div class="columns is-variable is-0-mobile">
         <div class="column has-text-centered-mobile">© 2019-2021 Brilliards</div>
       </div>
     </div>

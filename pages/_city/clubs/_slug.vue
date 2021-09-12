@@ -16,6 +16,14 @@
               <b-table :data="games" :columns="gamesColumns" :mobile-cards=false></b-table>
             </section>
             <section class="mb-6">
+              <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Способы оплаты</h2>
+              <ul>
+                <li v-for="payment in payments" :key="payment.id">
+                  {{ payment }}
+                </li>
+              </ul>
+            </section>
+            <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Фото</h2>
               <b-carousel-list
                 :data="photos"
@@ -31,7 +39,7 @@
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Удобства и услуги</h2>
-              <div class="columns  is-variable is-0-mobile is-mobile is-multiline">
+              <div class="columns is-variable is-0-mobile is-mobile is-multiline">
                 <div v-if="club.wifi" class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
                   <div>
                     <b-icon pack="fas" icon="wifi" type="is-info" size="is-medium"></b-icon>
@@ -128,10 +136,9 @@
                 </div>
               </div>
               <div class="media">
-                <div class="media-left mr-2"></div>
                 <div class="media-content">
                   <div class="is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-weight-light mb-2">Социальные сети</div>
-                  <div class="columns">
+                  <div class="columns is-variable is-0-mobile is-mobile">
                     <div class="column" v-for="social in socials" :key="social.id">
                       <template v-if="social.name === 'IN'">
                         <a :href="social.address" title="Instagram" rel="nofollow" target="_blank">
@@ -241,13 +248,13 @@ export default {
         for (let j = 0; j < hall.games.length; j++) {
           let game = hall.games[j];
           let gameName = hall.games[j].name;
-          let tablesQuantity = game.tables.length;
-          let tablesSize = game.tables[0].size;
+          let tablesQuantity = game.tables.length ? game.tables.length : 'нет данных';
+          let tablesSize = game.tables[0].size ? `${game.tables[0].size} футов` : 'нет данных';
           let gamesRow = {
             'Game': gameName,
             'Hall': hallName,
             'Quantity': tablesQuantity,
-            'Size': `${tablesSize} футов`,
+            'Size': tablesSize,
           };
 
           games.push(gamesRow);
@@ -314,6 +321,29 @@ export default {
         }
 
         return socials;
+      }
+    },
+    payments() {
+      if (this.club.payment_methods.length) {
+        let payments = [];
+
+        for (let i = 0; i < this.club.payment_methods.length; i++) {
+          let payment = '';
+
+          if (this.club.payment_methods[i] === 'CS') {
+            payment = 'Наличный расчет';
+          } else if (this.club.payment_methods[i] === 'VS') {
+            payment = 'VISA';
+          } else if (this.club.payment_methods[i] === 'MC') {
+            payment = 'MasterCard';
+          } else if (this.club.payment_methods[i] === 'MR') {
+            payment = 'МИР';
+          }
+
+          payments.push(payment);
+        }
+
+        return payments;
       }
     },
   },
