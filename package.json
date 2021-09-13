@@ -23,14 +23,14 @@
     "lvovich": "^1.0.16",
     "nuxt": "^2.13.0",
     "nuxt-buefy": "^0.4.4",
-    "nuxt-fontawesome": "^0.4.0"
+    "nuxt-fontawesome": "^0.4.0",
+    "vue-gtag": "^1.16.1"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^1.0.3",
     "@nuxtjs/eslint-config": "^3.0.0",
     "@nuxtjs/eslint-config-typescript": "^2.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
-    "@nuxtjs/google-analytics": "^2.4.0",
     "@nuxtjs/style-resources": "^1.0.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.2.0",

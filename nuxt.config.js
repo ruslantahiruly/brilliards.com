@@ -49,6 +49,10 @@ export default {
   */
   plugins: [
     '~/plugins/buefy.js',
+    {
+      src: '~/plugins/gtag.js',
+      mode: 'client',
+    },
   ],
   /*
   ** Auto import components
@@ -61,7 +65,6 @@ export default {
   buildModules: [
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
-    '@nuxtjs/google-analytics',
   ],
   /*
   ** Nuxt.js modules
@@ -103,9 +106,6 @@ export default {
       const { data } = await axios.get(`${process.env.BASE_URL}/sitemap-clubs/`);
       return data.map((club) => `/${club.city.url}/clubs/${club.slug}/`);
     }
-  },
-  googleAnalytics: {
-    id: 'UA-155180894-1',
   },
   /*
   ** Build configuration
