@@ -49,10 +49,7 @@ export default {
   */
   plugins: [
     '~/plugins/buefy.js',
-    {
-      src: '~/plugins/gtag.js',
-      mode: 'client',
-    },
+    '~/plugins/gtag.js',
   ],
   /*
   ** Auto import components
