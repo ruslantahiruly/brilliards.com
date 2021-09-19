@@ -168,6 +168,11 @@ $navbar-item-hover-background-color: $white;
 @import "~buefy/src/scss/components/_icon";
 @import "~buefy/src/scss/components/_modal";
 
+// Elements
+.icon-text {
+  align-items: center;
+}
+
 // Responsiveness
 @include mobile {
   .section {

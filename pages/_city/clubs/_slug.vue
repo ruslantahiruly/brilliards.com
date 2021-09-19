@@ -19,7 +19,18 @@
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Способы оплаты</h2>
               <ul>
                 <li v-for="payment in payments" :key="payment.id">
-                  {{ payment }}
+                  <template v-if="payment === 'Наличный расчет'">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="wallet" type="is-info" size="is-medium"></b-icon>
+                      <span>{{ payment }}</span>
+                    </span>
+                  </template>
+                  <template v-if="payment === 'Банковская карта'">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="credit-card" type="is-info" size="is-medium"></b-icon>
+                      <span>{{ payment }}</span>
+                    </span>
+                  </template>
                 </li>
               </ul>
             </section>
@@ -40,6 +51,12 @@
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Удобства и услуги</h2>
               <div class="columns is-variable is-0-mobile is-mobile is-multiline">
+                <div v-if="club.table_reservation" class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                  <div>
+                    <b-icon pack="fas" icon="book-open" type="is-info" size="is-medium"></b-icon>
+                  </div>
+                  <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Бронирование столов</div>
+                </div>
                 <div v-if="club.wifi" class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
                   <div>
                     <b-icon pack="fas" icon="wifi" type="is-info" size="is-medium"></b-icon>
@@ -158,6 +175,11 @@
                       <template v-if="social.name === 'OK'">
                         <a :href="social.address" title="Одноклассники" rel="nofollow" target="_blank">
                           <b-icon pack="fab" icon="odnoklassniki" type="is-info" size="is-medium"></b-icon>
+                        </a>
+                      </template>
+                      <template v-if="social.name === 'UT'">
+                        <a :href="social.address" title="YouTube" rel="nofollow" target="_blank">
+                          <b-icon pack="fab" icon="youtube" type="is-info" size="is-medium"></b-icon>
                         </a>
                       </template>
                     </div>
@@ -333,11 +355,7 @@ export default {
           if (this.club.payment_methods[i] === 'CS') {
             payment = 'Наличный расчет';
           } else if (this.club.payment_methods[i] === 'VS') {
-            payment = 'VISA';
-          } else if (this.club.payment_methods[i] === 'MC') {
-            payment = 'MasterCard';
-          } else if (this.club.payment_methods[i] === 'MR') {
-            payment = 'МИР';
+            payment = 'Банковская карта';
           }
 
           payments.push(payment);
