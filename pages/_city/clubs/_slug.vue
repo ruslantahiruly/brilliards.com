@@ -35,6 +35,14 @@
               </ul>
             </section>
             <section class="mb-6">
+              <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Акции</h2>
+              <div v-for="promotion in club.promotions" :key="promotion.id" class="box">
+                <h4>{{ promotion.name }}</h4>
+                <div>Предоставляется: студентам, школьникам</div>
+                <div>Скидка: {{ promotion.discount }}%</div>
+              </div>
+            </section>
+            <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Фото</h2>
               <b-carousel-list
                 :data="photos"
