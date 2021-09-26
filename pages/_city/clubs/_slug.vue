@@ -36,10 +36,15 @@
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Акции</h2>
-              <div v-for="promotion in club.promotions" :key="promotion.id" class="box">
-                <h4>{{ promotion.name }}</h4>
-                <div>Предоставляется: студентам, школьникам</div>
-                <div>Скидка: {{ promotion.discount }}%</div>
+              <div class="columns">
+                <div class="column is-half">
+                  <div v-for="promotion in club.promotions" :key="promotion.id" class="box">
+                    <h4 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop">{{ promotion.name }}</h4>
+                    <div>Предоставляется: студентам, школьникам</div>
+                    <div>Скидка: {{ promotion.discount }}%</div>
+                    <div>Срок действия: бессрочная</div>
+                  </div>
+                </div>
               </div>
             </section>
             <section class="mb-6">
@@ -128,7 +133,7 @@
               </div>
             </section>
           </div>
-          <div class="column">
+          <div class="sidebar column">
             <section class="box is-shadowless pt-3">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left-mobile has-text-centered mb-4 pb-3">Контакты</h2>
               <div class="media">
@@ -396,14 +401,14 @@ export default {
   background-color: rgba(0,0,0,.7);
 }
 
-.box {
+.sidebar .box {
   border: 1px solid $grey-lighter;
   border-radius: 4px;
   padding: 1rem;
   margin-top: -100px;
 }
 
-.box .title,
+.sidebar .box .title,
 .section .title {
   border-bottom: 1px solid $grey-lighter;
 }
