@@ -141,6 +141,9 @@ $navbar-box-shadow-color: $grey-lightest;
 $navbar-item-hover-color: $grey-dark;
 $navbar-item-hover-background-color: $white;
 
+// Elements
+$box-shadow: 0 0.5em 1em 0.3em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02);
+
 // Import Bulma and Buefy styles
 @import "~bulma/sass/base/_all";
 @import "~bulma/sass/helpers/_all";

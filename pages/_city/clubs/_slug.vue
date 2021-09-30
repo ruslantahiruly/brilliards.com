@@ -409,7 +409,7 @@ export default {
 }
 
 .sidebar .box .title,
-.section .title {
+section > .title {
   border-bottom: 1px solid $grey-lighter;
 }
 
