@@ -13,26 +13,21 @@
           <div class="column is-two-thirds">
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Виды бильярда</h2>
-              <b-table :data="games" :columns="gamesColumns" :mobile-cards=false></b-table>
+              <b-table :data="equipment.games" :columns="gamesColumns" :mobile-cards=false></b-table>
             </section>
             <section class="mb-6">
-              <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Способы оплаты</h2>
-              <ul>
-                <li v-for="payment in payments" :key="payment.id">
-                  <template v-if="payment === 'Наличный расчет'">
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="wallet" type="is-info" size="is-medium"></b-icon>
-                      <span>{{ payment }}</span>
-                    </span>
-                  </template>
-                  <template v-if="payment === 'Банковская карта'">
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="credit-card" type="is-info" size="is-medium"></b-icon>
-                      <span>{{ payment }}</span>
-                    </span>
-                  </template>
-                </li>
-              </ul>
+              <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Оборудование</h2>
+              <b-tabs v-model="activeTab" size="is-medium">
+                <b-tab-item label="Столы">
+                  <b-table :data="equipment.tables" :columns="tablesColumns" :mobile-cards=false></b-table>
+                </b-tab-item>
+                <b-tab-item label="Шары">
+                  <b-table :data="equipment.balls" :columns="ballsColumns" :mobile-cards=false></b-table>
+                </b-tab-item>
+                <b-tab-item label="Кии">
+                  <b-table :data="equipment.cues" :columns="cuesColumns" :mobile-cards=false></b-table>
+                </b-tab-item>
+              </b-tabs>
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Акции</h2>
@@ -40,12 +35,43 @@
                 <div class="column is-half">
                   <div v-for="promotion in club.promotions" :key="promotion.id" class="box">
                     <h4 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop">{{ promotion.name }}</h4>
-                    <div>Предоставляется: студентам, школьникам</div>
-                    <div>Скидка: {{ promotion.discount }}%</div>
-                    <div>Срок действия: бессрочная</div>
+                    <div class="icon-text">
+                      <b-icon pack="fas" icon="user-friends" type="is-success"></b-icon>
+                      <span class="is-size-12-mobile is-size-12-tablet is-size-12-desktop">{{ promotion.customer_categories }}</span>
+                    </div>
+                    <div class="icon-text">
+                      <b-icon pack="fas" icon="tag" type="is-success"></b-icon>
+                      <span class="is-size-12-mobile is-size-12-tablet is-size-12-desktop">Скидка {{ promotion.discount }}%</span>
+                    </div>
+                    <template v-if="promotion.time_from">
+                      <div class="icon-text">
+                        <b-icon pack="fas" icon="clock" type="is-success"></b-icon>
+                        <span>с {{ promotion.time_from }} до {{ promotion.time_to }}</span>
+                        {{ promotion.days_of_the_week }}
+                      </div>
+                    </template>
                   </div>
                 </div>
               </div>
+            </section>
+            <section class="mb-6">
+              <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Способы оплаты</h2>
+              <ul>
+                <li v-for="payment in payments" :key="payment.id">
+                  <template v-if="payment === 'Наличные'">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="wallet" type="is-info" size="is-medium"></b-icon>
+                      <span>{{ payment }}</span>
+                    </span>
+                  </template>
+                  <template v-if="payment === 'Карты'">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="credit-card" type="is-info" size="is-medium"></b-icon>
+                      <span>{{ payment }}</span>
+                    </span>
+                  </template>
+                </li>
+              </ul>
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Фото</h2>
@@ -246,6 +272,52 @@ export default {
           label: 'Размер столов',
         },
       ],
+      tablesColumns: [
+        {
+          field: 'Game',
+          label: 'Игра',
+        },
+        {
+          field: 'Hall',
+          label: 'Зал',
+        },
+        {
+          field: 'Brand',
+          label: 'Производитель',
+        },
+        {
+          field: 'Cloth',
+          label: 'Сукно',
+        },
+      ],
+      ballsColumns: [
+        {
+          field: 'Game',
+          label: 'Игра',
+        },
+        {
+          field: 'Hall',
+          label: 'Зал',
+        },
+        {
+          field: 'Brand',
+          label: 'Производитель',
+        },
+      ],
+      cuesColumns: [
+        {
+          field: 'Game',
+          label: 'Игра',
+        },
+        {
+          field: 'Hall',
+          label: 'Зал',
+        },
+        {
+          field: 'Brand',
+          label: 'Производитель',
+        },
+      ],
       activeTab: 0,
     };
   },
@@ -273,8 +345,12 @@ export default {
     cities() {
       return this.$store.getters['cities/cities'];
     },
-    games() {
+    equipment() {
+      let equipment = {};
       let games = [];
+      let tables = [];
+      let cues = [];
+      let balls = [];
 
       for (let i = 0; i < this.club.halls.length; i++) {
         let hall = this.club.halls[i];
@@ -285,18 +361,46 @@ export default {
           let gameName = hall.games[j].name;
           let tablesQuantity = game.tables.length ? game.tables.length : 'нет данных';
           let tablesSize = game.tables[0].size ? `${game.tables[0].size} футов` : 'нет данных';
+          let tablesBrand = game.tables[0].brand ? `${game.tables[0].brand}` : 'нет данных';
+          let tablesCloth = game.tables[0].cloth ? `${game.tables[0].cloth}` : 'нет данных';
+          let tablesCues = game.tables[0].cues ? `${game.tables[0].cues}` : 'нет данных';
+          let tablesBalls = game.tables[0].balls ? `${game.tables[0].balls}` : 'нет данных';
           let gamesRow = {
             'Game': gameName,
             'Hall': hallName,
             'Quantity': tablesQuantity,
             'Size': tablesSize,
           };
+          let tablesRow = {
+            'Game': gameName,
+            'Hall': hallName,
+            'Brand': tablesBrand,
+            'Cloth': tablesCloth,
+          };
+          let cuesRow = {
+            'Game': gameName,
+            'Hall': hallName,
+            'Brand': tablesCues,
+          };
+          let ballsRow = {
+            'Game': gameName,
+            'Hall': hallName,
+            'Brand': tablesBalls,
+          };
 
           games.push(gamesRow);
+          tables.push(tablesRow);
+          cues.push(cuesRow);
+          balls.push(ballsRow);
         }
       }
 
-      return games;
+      equipment.games = games;
+      equipment.tables = tables;
+      equipment.cues = cues;
+      equipment.balls = balls;
+
+      return equipment;
     },
     photos() {
       if (this.club.photos.length) {
@@ -360,19 +464,7 @@ export default {
     },
     payments() {
       if (this.club.payment_methods.length) {
-        let payments = [];
-
-        for (let i = 0; i < this.club.payment_methods.length; i++) {
-          let payment = '';
-
-          if (this.club.payment_methods[i] === 'CS') {
-            payment = 'Наличный расчет';
-          } else if (this.club.payment_methods[i] === 'VS') {
-            payment = 'Банковская карта';
-          }
-
-          payments.push(payment);
-        }
+        let payments = this.club.payment_methods.split(', ');
 
         return payments;
       }

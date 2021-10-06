@@ -141,6 +141,9 @@ $navbar-box-shadow-color: $grey-lightest;
 $navbar-item-hover-color: $grey-dark;
 $navbar-item-hover-background-color: $white;
 
+$tabs-link-active-border-bottom-color: $info;
+$tabs-link-active-color: $info;
+
 // Elements
 $box-shadow: 0 0.5em 1em 0.3em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02);
 
@@ -160,6 +163,7 @@ $box-shadow: 0 0.5em 1em 0.3em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($sche
 @import "~bulma/sass/components/navbar";
 @import "~bulma/sass/components/modal";
 @import "~bulma/sass/components/media";
+@import "~bulma/sass/components/tabs";
 @import "~bulma/sass/grid/_all";
 @import "~bulma/sass/layout/_all";
 @import "~bulma/sass/helpers/_all";
@@ -168,6 +172,7 @@ $box-shadow: 0 0.5em 1em 0.3em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($sche
 @import "~buefy/src/scss/components/_carousel";
 @import "~buefy/src/scss/components/_navbar";
 @import "~buefy/src/scss/components/_table";
+@import "~buefy/src/scss/components/_tabs";
 @import "~buefy/src/scss/components/_icon";
 @import "~buefy/src/scss/components/_modal";
 
