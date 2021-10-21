@@ -4,6 +4,14 @@
       <div class="hero-body is-flex is-align-items-center">
         <div class="container is-max-widescreen">
           <h1 class="title is-size-3-mobile is-size-2-tablet is-size-1-desktop"><span class="is-size-12-mobile is-size-11-tablet is-size-11-desktop has-text-grey-light has-text-weight-normal mb-6">Бильядрный клуб</span><br>{{ club.name }}</h1>
+          <div :class="[thisDay.isOpened ? 'is-success' : 'is-danger']" class="button is-size-13-mobile is-size-12-tablet is-size-12-desktop is-outlined is-rounded">
+            <template v-if="thisDay.isOpened">
+              Открыто
+            </template>
+            <template v-else>
+              Закрыто
+            </template>
+          </div>
         </div>
       </div>
     </section>
@@ -32,8 +40,8 @@
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Акции</h2>
               <div class="columns">
-                <div class="column is-half">
-                  <div v-for="promotion in club.promotions" :key="promotion.id" class="box">
+                <div v-for="promotion in club.promotions" :key="promotion.id" class="column is-half">
+                  <div class="box">
                     <h4 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop">{{ promotion.name }}</h4>
                     <div class="icon-text">
                       <b-icon pack="fas" icon="user-friends" type="is-success"></b-icon>
@@ -425,11 +433,17 @@ export default {
       }
     },
     thisDay() {
-      let days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-      let day = new Date();
-      let dayHours = day.getHours();
-      let dayMinutes = day.getMinutes();
-      let dayName = days[day.getDay()];
+      let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+      let date = new Date();
+      let currentDay = date.getUTCDay();
+      let currentTimeHours = date.getUTCHours() + 3;
+
+      if (currentTimeHours > 23) {
+        currentTimeHours = currentTimeHours - 24;
+        currentDay += 1;
+      }
+      
+      let dayName = weekDays[currentDay];
 
       for (let i = 0; i < this.club.working_times.length; i++) {
         let workingTime = this.club.working_times[i];
@@ -438,8 +452,28 @@ export default {
           let thisDay = i;
           let openingTime = this.club.working_times[thisDay].opening_time;
           let closingTime = this.club.working_times[thisDay].closing_time;
+          let openingTimeHours = parseInt(openingTime);
+          let closingTimeHours = parseInt(closingTime);
+
+          let isOpened = false;
+
+          if (openingTimeHours > closingTimeHours) {
+            if (currentTimeHours >= openingTimeHours) {
+              isOpened = true;
+            }
+          } else if (openingTimeHours < closingTimeHours) {
+            if (currentTimeHours >= openingTimeHours && currentTimeHours < closingTimeHours) {
+              isOpened = true;
+            } 
+          } else if (openingTimeHours === closingTimeHours) {
+            isOpened = true;
+          }
 
           return {
+            isOpened,
+            currentTimeHours,
+            openingTimeHours,
+            closingTimeHours,
             openingTime,
             closingTime,
           };
@@ -510,7 +544,7 @@ section > .title {
     height: 250px;
   }
 
-  .box {
+  .sidebar .box {
     border: 0;
     border-bottom: 1px solid $grey-lighter;
     padding: 1rem;
