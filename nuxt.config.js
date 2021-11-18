@@ -79,11 +79,11 @@ export default {
     imports: [
       {
         set: '@fortawesome/free-solid-svg-icons',
-        icons: ['faLocationArrow', 'faMapMarkerAlt', 'faWifi', 'faTv', 'faUtensils', 'faGlassWhiskey', 'faUserShield', 'faSmoking', 'faFan', 'faRestroom', 'faParking', 'faHatCowboy', 'faPhoneAlt', 'faClock', 'faArrowUp', 'faAngleLeft', 'faAngleRight', 'faGlobe', 'faBookOpen', 'faWallet', 'faCreditCard', 'faTag', 'faUserFriends']
+        icons: ['faLocationArrow', 'faMapMarkerAlt', 'faWifi', 'faTv', 'faUtensils', 'faGlassWhiskey', 'faUserShield', 'faSmoking', 'faFan', 'faRestroom', 'faParking', 'faHatCowboy', 'faPhoneAlt', 'faClock', 'faArrowUp', 'faAngleLeft', 'faAngleRight', 'faGlobe', 'faBookOpen', 'faWallet', 'faCreditCard', 'faTag', 'faUserFriends', 'faChevronDown', 'faExclamationTriangle', 'faPercent']
       },
       {
         set: '@fortawesome/free-brands-svg-icons',
-        icons: ['faInstagram', 'faVk', 'faFacebookF', 'faOdnoklassniki', 'faYoutube']
+        icons: ['faInstagram', 'faVk', 'faFacebookF', 'faOdnoklassniki', 'faYoutube', 'faTiktok']
       }
     ]
   },

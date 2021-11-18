@@ -5,6 +5,7 @@
 $red: #f00;
 $blue: #1078ff;
 $green: #00d84b;
+$yellow: #ffcb3a;
 
 // Brand colors
 $primary: $red;
@@ -12,6 +13,7 @@ $link: $red;
 $info: $blue;
 $success: $green;
 $danger: $red;
+$warning: $yellow;
 
 // Typography
 $family-primary: Roboto, Arial, sans-serif;
@@ -175,10 +177,21 @@ $box-shadow: 0 0.5em 1em 0.3em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($sche
 @import "~buefy/src/scss/components/_tabs";
 @import "~buefy/src/scss/components/_icon";
 @import "~buefy/src/scss/components/_modal";
+@import "~buefy/src/scss/components/_tooltip";
 
 // Elements
 .icon-text {
   align-items: center;
+}
+
+.dot {
+  height: 5px;
+  width: 5px;
+  background-color: $success;
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0.4rem 0;
 }
 
 // Responsiveness

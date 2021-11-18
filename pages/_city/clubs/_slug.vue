@@ -3,15 +3,40 @@
     <section class="hero is-primary" :style="{ backgroundImage: backgroundImage }">
       <div class="hero-body is-flex is-align-items-center">
         <div class="container is-max-widescreen">
-          <h1 class="title is-size-3-mobile is-size-2-tablet is-size-1-desktop"><span class="is-size-12-mobile is-size-11-tablet is-size-11-desktop has-text-grey-light has-text-weight-normal mb-6">Бильядрный клуб</span><br>{{ club.name }}</h1>
-          <div :class="[thisDay.isOpened ? 'is-success' : 'is-danger']" class="button is-size-13-mobile is-size-12-tablet is-size-12-desktop is-outlined is-rounded">
-            <template v-if="thisDay.isOpened">
-              Открыто
-            </template>
-            <template v-else>
-              Закрыто
-            </template>
-          </div>
+          <h1 class="title is-size-3-mobile is-size-2-tablet is-size-1-desktop"><span class="is-size-12-mobile is-size-11-tablet is-size-11-desktop has-text-grey-light has-text-weight-normal mb-6">Бильярдный клуб</span><br>{{ club.name }}</h1>
+          <template v-if="club.is_open">
+            <div :class="[thisDay.isOpened ? 'is-success' : 'is-danger']" class="button is-static is-size-13-mobile is-size-12-tablet is-size-12-desktop is-outlined is-rounded">
+              <template v-if="thisDay.isOpened">
+                <template v-if="thisDay.is24Hours">
+                  Открыто круглосуточно
+                </template>
+                <template v-else>
+                  Открыто до {{ thisDay.closingTime }}
+                </template>
+              </template>
+              <template v-else>
+                Откроется в {{ thisDay.openingTime }}
+              </template>
+            </div>
+            <div v-if="club.is_pre_entry" class="mt-2">
+              <div class="icon-text is-size-13-mobile is-size-12-tablet is-size-12-desktop">
+                <b-icon pack="fas" icon="exclamation-triangle" type="is-warning" size="is-small"></b-icon>
+                <span class="has-text-weight-light">Вход по предварительной записи</span>
+              </div>
+            </div>
+            <div v-if="club.is_medical_masks" class="mt-2">
+              <div class="icon-text is-size-13-mobile is-size-12-tablet is-size-12-desktop">
+                <b-icon pack="fas" icon="exclamation-triangle" type="is-warning" size="is-small"></b-icon>
+                <span class="has-text-weight-light">Вход только в медицинских масках</span>
+              </div>
+            </div>
+          </template>
+          <template v-else>
+            <div class="button is-static is-danger is-size-13-mobile is-size-12-tablet is-size-12-desktop is-outlined is-rounded">
+              <b-icon pack="fas" icon="exclamation-triangle" type="is-danger" size="is-small" custom-size="sm"></b-icon>
+              <span>Закрыто</span>
+            </div>
+          </template>
         </div>
       </div>
     </section>
@@ -40,26 +65,11 @@
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Акции</h2>
               <div class="columns">
-                <div v-for="promotion in club.promotions" :key="promotion.id" class="column is-half">
-                  <div class="box">
-                    <h4 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop">{{ promotion.name }}</h4>
-                    <div class="icon-text">
-                      <b-icon pack="fas" icon="user-friends" type="is-success"></b-icon>
-                      <span class="is-size-12-mobile is-size-12-tablet is-size-12-desktop">{{ promotion.customer_categories }}</span>
-                    </div>
-                    <div class="icon-text">
-                      <b-icon pack="fas" icon="tag" type="is-success"></b-icon>
-                      <span class="is-size-12-mobile is-size-12-tablet is-size-12-desktop">Скидка {{ promotion.discount }}%</span>
-                    </div>
-                    <template v-if="promotion.time_from">
-                      <div class="icon-text">
-                        <b-icon pack="fas" icon="clock" type="is-success"></b-icon>
-                        <span>с {{ promotion.time_from }} до {{ promotion.time_to }}</span>
-                        {{ promotion.days_of_the_week }}
-                      </div>
-                    </template>
-                  </div>
-                </div>
+                <Promotion
+                  v-for="promotion in promotions"
+                  :key="promotion.id"
+                  :promotion="promotion"
+                />
               </div>
             </section>
             <section class="mb-6">
@@ -194,47 +204,88 @@
                 </div>
                 <div class="media-content">
                   <div class="is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-weight-light mb-2">Время работы</div>
-                  <div class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-weight-light">
-                    Сегодня с {{ thisDay.openingTime }} до {{ thisDay.closingTime }}
-                  </div>
+                  <b-tooltip position="is-bottom" type="is-light" :triggers="['click']" :auto-close="['outside', 'escape']">
+                    <div class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-weight-light is-clickable">
+                      <template v-if="thisDay.is24Hours">
+                        <div class="icon-text">
+                          <span>Круглосуточно</span>
+                          <b-icon pack="fas" icon="chevron-down" type="is-info" size="is-small" custom-size="xs"></b-icon>
+                        </div>
+                      </template>
+                      <template v-else>
+                        <div class="icon-text">
+                          <span>Сегодня с {{ thisDay.openingTime }} до {{ thisDay.closingTime }}</span>
+                          <b-icon pack="fas" icon="chevron-down" type="is-info" size="is-small" custom-size="xs"></b-icon>
+                        </div>
+                      </template>
+                    </div>
+                    <template v-slot:content>
+                      <table class="table">
+                        <tbody>
+                          <tr v-for="workingTime in workingTimes" :key="workingTime.name">
+                            <template v-if="workingTime.is24Hours">
+                              <td>{{ workingTime.name }}</td>
+                              <td>Круглосуточно</td>
+                            </template>
+                            <template v-else>
+                              <td>{{ workingTime.name }}</td>
+                              <td>{{ workingTime.openingTime }} – {{ workingTime.closingTime }}</td>
+                            </template>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </template>
+                  </b-tooltip>
                 </div>
               </div>
               <div class="media">
                 <div class="media-content">
                   <div class="is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-weight-light mb-2">Социальные сети</div>
                   <div class="columns is-variable is-0-mobile is-mobile">
-                    <div class="column" v-for="social in socials" :key="social.id">
-                      <template v-if="social.name === 'IN'">
-                        <a :href="social.address" title="Instagram" rel="nofollow" target="_blank">
-                          <b-icon pack="fab" icon="instagram" type="is-info" size="is-medium"></b-icon>
+                    <template v-if="socials || club.website">
+                      <div class="column" v-for="social in socials" :key="social.id">
+                        <template v-if="social.name === 'IN'">
+                          <a :href="social.address" title="Instagram" rel="nofollow" target="_blank">
+                            <b-icon pack="fab" icon="instagram" type="is-info" size="is-medium"></b-icon>
+                          </a>
+                        </template>
+                        <template v-if="social.name === 'VK'">
+                          <a :href="social.address" title="Вконтакте" rel="nofollow" target="_blank">
+                            <b-icon pack="fab" icon="vk" type="is-info" size="is-medium"></b-icon>
+                          </a>
+                        </template>
+                        <template v-if="social.name === 'FB'">
+                          <a :href="social.address" title="Facebook" rel="nofollow" target="_blank">
+                            <b-icon pack="fab" icon="facebook-f" type="is-info" size="is-medium"></b-icon>
+                          </a>
+                        </template>
+                        <template v-if="social.name === 'OK'">
+                          <a :href="social.address" title="Одноклассники" rel="nofollow" target="_blank">
+                            <b-icon pack="fab" icon="odnoklassniki" type="is-info" size="is-medium"></b-icon>
+                          </a>
+                        </template>
+                        <template v-if="social.name === 'UT'">
+                          <a :href="social.address" title="YouTube" rel="nofollow" target="_blank">
+                            <b-icon pack="fab" icon="youtube" type="is-info" size="is-medium"></b-icon>
+                          </a>
+                        </template>
+                        <template v-if="social.name === 'TT'">
+                          <a :href="social.address" title="Tiktok" rel="nofollow" target="_blank">
+                            <b-icon pack="fab" icon="tiktok" type="is-info" size="is-medium"></b-icon>
+                          </a>
+                        </template>
+                      </div>
+                      <div class="column" v-if="club.website">
+                        <a :href="club.website" title="Официальный сайт" rel="nofollow" target="_blank">
+                          <b-icon pack="fas" icon="globe" type="is-info" size="is-medium"></b-icon>
                         </a>
-                      </template>
-                      <template v-if="social.name === 'VK'">
-                        <a :href="social.address" title="Вконтакте" rel="nofollow" target="_blank">
-                          <b-icon pack="fab" icon="vk" type="is-info" size="is-medium"></b-icon>
-                        </a>
-                      </template>
-                      <template v-if="social.name === 'FB'">
-                        <a :href="social.address" title="Facebook" rel="nofollow" target="_blank">
-                          <b-icon pack="fab" icon="facebook-f" type="is-info" size="is-medium"></b-icon>
-                        </a>
-                      </template>
-                      <template v-if="social.name === 'OK'">
-                        <a :href="social.address" title="Одноклассники" rel="nofollow" target="_blank">
-                          <b-icon pack="fab" icon="odnoklassniki" type="is-info" size="is-medium"></b-icon>
-                        </a>
-                      </template>
-                      <template v-if="social.name === 'UT'">
-                        <a :href="social.address" title="YouTube" rel="nofollow" target="_blank">
-                          <b-icon pack="fab" icon="youtube" type="is-info" size="is-medium"></b-icon>
-                        </a>
-                      </template>
-                    </div>
-                    <div class="column" v-if="club.website">
-                      <a :href="club.website" title="Официальный сайт" rel="nofollow" target="_blank">
-                        <b-icon pack="fas" icon="globe" type="is-info" size="is-medium"></b-icon>
-                      </a>
-                    </div>
+                      </div>
+                    </template>
+                    <template v-else>
+                      <div class="column">
+                        Нет данных
+                      </div>
+                    </template>
                   </div>
                 </div>
               </div>
@@ -432,6 +483,74 @@ export default {
         return `url('/img/background.jpg')`;
       }
     },
+    workingTimes() {
+      if (this.club.working_times.length) {
+        let workingTimes = [];
+
+        for (let i = 0; i < this.club.working_times.length; i++) {
+          let workingTime = this.club.working_times[i];
+
+          let is24Hours = false;
+
+          if (workingTime.opening_time == workingTime.closing_time) {
+            is24Hours = true;
+          }
+
+          if (workingTime.name == 'MO') {
+            workingTimes.push({
+              name: 'Пн',
+              openingTime: workingTime.opening_time,
+              closingTime: workingTime.closing_time,
+              is24Hours,
+            });
+          } else if (workingTime.name == 'TU') {
+            workingTimes.push({
+              name: 'Вт',
+              openingTime: workingTime.opening_time,
+              closingTime: workingTime.closing_time,
+              is24Hours,
+            });
+          } else if (workingTime.name == 'WE') {
+            workingTimes.push({
+              name: 'Ср',
+              openingTime: workingTime.opening_time,
+              closingTime: workingTime.closing_time,
+              is24Hours,
+            });
+          } else if (workingTime.name == 'TH') {
+            workingTimes.push({
+              name: 'Чт',
+              openingTime: workingTime.opening_time,
+              closingTime: workingTime.closing_time,
+              is24Hours,
+            });
+          } else if (workingTime.name == 'FR') {
+            workingTimes.push({
+              name: 'Пт',
+              openingTime: workingTime.opening_time,
+              closingTime: workingTime.closing_time,
+              is24Hours,
+            });
+          } else if (workingTime.name == 'SA') {
+            workingTimes.push({
+              name: 'Сб',
+              openingTime: workingTime.opening_time,
+              closingTime: workingTime.closing_time,
+              is24Hours,
+            });
+          } else if (workingTime.name == 'SU') {
+            workingTimes.push({
+              name: 'Вс',
+              openingTime: workingTime.opening_time,
+              closingTime: workingTime.closing_time,
+              is24Hours,
+            });
+          }
+        }
+
+        return workingTimes;
+      }
+    },
     thisDay() {
       let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
       let date = new Date();
@@ -455,6 +574,12 @@ export default {
           let openingTimeHours = parseInt(openingTime);
           let closingTimeHours = parseInt(closingTime);
 
+          let is24Hours = false;
+
+          if (openingTime == closingTime) {
+            is24Hours = true;
+          }
+
           let isOpened = false;
 
           if (openingTimeHours > closingTimeHours) {
@@ -470,6 +595,7 @@ export default {
           }
 
           return {
+            is24Hours,
             isOpened,
             currentTimeHours,
             openingTimeHours,
@@ -503,13 +629,34 @@ export default {
         return payments;
       }
     },
+    promotions() {
+      if (this.club.promotions.length) {
+        let promotions = [];
+
+        for (let i = 0; i < this.club.promotions.length; i++) {
+          let promotion = {
+            name: this.club.promotions[i].name,
+            type: this.club.promotions[i].type,
+            timeFrom: this.club.promotions[i].time_from,
+            timeTo: this.club.promotions[i].time_to,
+            discount: this.club.promotions[i].discount,
+            customerCategories: this.club.promotions[i].customer_categories.split(', '),
+            daysOfTheWeek: this.club.promotions[i].days_of_the_week.split(', '),
+          };
+
+          promotions.push(promotion);
+        }
+
+        return promotions;
+      }
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .hero {
-  height: 400px;
+  min-height: 400px;
   background-position: 50%;
   background-size: cover;
   position: relative;
@@ -539,9 +686,13 @@ section > .title {
   border-bottom: 1px solid $grey-lighter;
 }
 
+.media-content {
+  overflow: visible;
+}
+
 @include mobile {
   .hero {
-    height: 250px;
+    min-height: 250px;
   }
 
   .sidebar .box {
