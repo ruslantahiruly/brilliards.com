@@ -50,7 +50,7 @@
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Оборудование</h2>
-              <b-tabs v-model="activeTab" size="is-medium">
+              <b-tabs v-model="equipmentActiveTab" size="is-medium">
                 <b-tab-item label="Столы">
                   <b-table :data="equipment.tables" :columns="tablesColumns" :mobile-cards=false></b-table>
                 </b-tab-item>
@@ -59,6 +59,20 @@
                 </b-tab-item>
                 <b-tab-item label="Кии">
                   <b-table :data="equipment.cues" :columns="cuesColumns" :mobile-cards=false></b-table>
+                </b-tab-item>
+              </b-tabs>
+            </section>
+            <section class="mb-6">
+              <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Цены</h2>
+              <b-tabs v-model="pricesActiveTab" size="is-medium">
+                <b-tab-item label="Русский бильярд">
+                  <b-table :data="prices.russianPrices" :columns="pricesColumnsRS" :bordered="isBordered" :mobile-cards=false></b-table>
+                </b-tab-item>
+                <b-tab-item label="Пул">
+                  <b-table :data="prices.poolPrices" :columns="pricesColumnsPL" :bordered="isBordered" :mobile-cards=false></b-table>
+                </b-tab-item>
+                <b-tab-item label="Снукер">
+                  <b-table :data="prices.snookerPrices" :columns="pricesColumnsSK" :bordered="isBordered" :mobile-cards=false></b-table>
                 </b-tab-item>
               </b-tabs>
             </section>
@@ -377,7 +391,135 @@ export default {
           label: 'Производитель',
         },
       ],
-      activeTab: 0,
+      pricesColumnsRS: [
+        {
+          field: 'Time',
+          label: 'Время',
+          centered: true,
+        },
+        {
+          field: 'MO',
+          label: 'ПН',
+          centered: true,
+        },
+        {
+          field: 'TU',
+          label: 'ВТ',
+          centered: true,
+        },
+        {
+          field: 'WE',
+          label: 'СР',
+          centered: true,
+        },
+        {
+          field: 'TH',
+          label: 'ЧТ',
+          centered: true,
+        },
+        {
+          field: 'FR',
+          label: 'ПТ',
+          centered: true,
+        },
+        {
+          field: 'SA',
+          label: 'СБ',
+          centered: true,
+        },
+        {
+          field: 'SU',
+          label: 'ВС',
+          centered: true,
+        },
+      ],
+      pricesColumnsPL: [
+        {
+          field: 'Time',
+          label: 'Время',
+          centered: true,
+        },
+        {
+          field: 'MO',
+          label: 'ПН',
+          centered: true,
+        },
+        {
+          field: 'TU',
+          label: 'ВТ',
+          centered: true,
+        },
+        {
+          field: 'WE',
+          label: 'СР',
+          centered: true,
+        },
+        {
+          field: 'TH',
+          label: 'ЧТ',
+          centered: true,
+        },
+        {
+          field: 'FR',
+          label: 'ПТ',
+          centered: true,
+        },
+        {
+          field: 'SA',
+          label: 'СБ',
+          centered: true,
+        },
+        {
+          field: 'SU',
+          label: 'ВС',
+          centered: true,
+        },
+      ],
+      pricesColumnsSK: [
+        {
+          field: 'Time',
+          label: 'Время',
+          centered: true,
+        },
+        {
+          field: 'MO',
+          label: 'ПН',
+          centered: true,
+        },
+        {
+          field: 'TU',
+          label: 'ВТ',
+          centered: true,
+        },
+        {
+          field: 'WE',
+          label: 'СР',
+          centered: true,
+        },
+        {
+          field: 'TH',
+          label: 'ЧТ',
+          centered: true,
+        },
+        {
+          field: 'FR',
+          label: 'ПТ',
+          centered: true,
+        },
+        {
+          field: 'SA',
+          label: 'СБ',
+          centered: true,
+        },
+        {
+          field: 'SU',
+          label: 'ВС',
+          centered: true,
+        },
+      ],
+      equipmentActiveTab: 0,
+      pricesActiveTab: 0,
+      isBordered: true,
     };
   },
   async asyncData({ $axios, params }) {
@@ -460,6 +602,220 @@ export default {
       equipment.balls = balls;
 
       return equipment;
+    },
+    prices() {
+      if (this.club.prices.length) {
+        // Collecting timestamps, deleting duplicates and sorting numbers
+        let timestamps = [];
+
+        for (let i = 0; i < this.club.prices.length; i++) {
+          let price = this.club.prices[i];
+
+          timestamps.push(price.price_from);
+          timestamps.push(price.price_to);
+        }
+
+        timestamps = [...new Set(timestamps)];
+
+        function compareNumeric(a, b) {
+          a = parseInt(a);
+          b = parseInt(b);
+
+          if (a > b) return 1;
+          if (a == b) return 0;
+          if (a < b) return -1;
+        }
+
+        timestamps.sort(compareNumeric);
+
+        // Generating time intervals and excluding those're out of 'working_times'
+        let timeIntervals = [];
+
+        for (let i = 0; i < timestamps.length; i++) {
+          if (i !== timestamps.length - 1) {
+            timeIntervals.push(`${timestamps[i]} – ${timestamps[i+1]}`);
+          } else {
+            timeIntervals.push(`${timestamps[i]} – ${timestamps[0]}`);
+          }
+        }
+
+        let maxClosingNum = Number.NEGATIVE_INFINITY;
+        let maxClosingTime = null;
+
+        for (let i = 0; i < this.club.working_times.length; i++) {
+          let tempMaxClosingNum = null;
+
+          if ( parseInt(this.club.working_times[i].opening_time) != parseInt(this.club.working_times[i].closing_time) ) {
+            if ( parseInt(this.club.working_times[i].opening_time) < parseInt(this.club.working_times[i].closing_time) && tempMaxClosingNum == null ) {
+              if ( parseInt(this.club.working_times[i].closing_time) > maxClosingNum ) {
+                maxClosingNum = parseInt(this.club.working_times[i].closing_time);
+                maxClosingTime = this.club.working_times[i].closing_time;
+              }
+            } else {
+              if ( parseInt(this.club.working_times[i].closing_time) > maxClosingNum ) {
+                maxClosingNum = parseInt(this.club.working_times[i].closing_time);
+                maxClosingTime = this.club.working_times[i].closing_time;
+                tempMaxClosingNum = parseInt(this.club.working_times[i].closing_time);
+              }
+            }
+          }
+        }
+
+        let minOpeningNum = Number.POSITIVE_INFINITY;
+        let minOpeningTime = null;
+
+        for (let i = 0; i < this.club.working_times.length; i++) {
+          if ( parseInt(this.club.working_times[i].opening_time) != parseInt(this.club.working_times[i].closing_time) ) {
+            if (parseInt(this.club.working_times[i].opening_time) < minOpeningNum) {
+              minOpeningNum = parseInt(this.club.working_times[i].opening_time);
+              minOpeningTime = this.club.working_times[i].opening_time;
+            }
+          }
+        }
+
+        // Deleting time interval that's out of working time
+        let indexesTimeIntervals = [];
+
+        if (minOpeningTime != maxClosingTime) {
+          for (let i = 0; i < timeIntervals.length; i++) {
+            let times = timeIntervals[i].split(' – ');
+
+            if ( parseInt(times[0]) == parseInt(maxClosingTime) ) {
+              indexesTimeIntervals.push(i);
+            }
+          }
+
+          timeIntervals = timeIntervals.filter(function(item, index) {
+            return indexesTimeIntervals.indexOf(index) < 0;
+          });
+        }
+
+        // Ordering 'timeIntervals' from 'opening_time'
+        if (minOpeningTime != maxClosingTime) {
+          for (let i = 0; i < timeIntervals.length; i++) {
+            let times = timeIntervals[0].split(' – ');
+            
+            if ( parseInt(times[1]) <= parseInt(minOpeningTime) && parseInt(times[0]) < parseInt(times[1]) ) {
+              let firstInterval = timeIntervals.shift();
+              
+              timeIntervals.push(firstInterval);
+            }
+          }
+        } else {
+          for (let i = 0; i < timeIntervals.length; i++) {
+            let times = timeIntervals[0].split(' – ');
+            
+            if ( parseInt(times[1]) <= 6 ) {
+              let firstInterval = timeIntervals.shift();
+              
+              timeIntervals.push(firstInterval);
+            }
+          }
+        }
+
+        // Populating table 'td's with prices' values
+        let prices = {};
+        let russianPrices = [];
+        let poolPrices = [];
+        let snookerPrices = [];
+
+        for (let i = 0; i < timeIntervals.length; i++) {
+          let time = timeIntervals[i];
+          let times = timeIntervals[i].split(' – ');
+          let timeFrom = times[0];
+          let timeTo = times[1];
+
+          let russianPricesRow = { 'Time': time, };
+          let poolPricesRow = { 'Time': time, };
+          let snookerPricesRow = { 'Time': time, };
+
+          for (let j = 0; j < this.club.prices.length; j++) {
+            let price = this.club.prices[j];
+
+            if ( parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to) && price.tables.find(item => item.game == 'Русский бильярд') ) {
+              if ( price.working_times.find(item => item.name == 'MO') ) {
+                russianPricesRow['MO'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'TU') ) {
+                russianPricesRow['TU'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'WE') ) {
+                russianPricesRow['WE'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'TH') ) {
+                russianPricesRow['TH'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'FR') ) {
+                russianPricesRow['FR'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'SA') ) {
+                russianPricesRow['SA'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'SU') ) {
+                russianPricesRow['SU'] = price.value;
+              }
+            }
+
+            if ( parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to) && price.tables.find(item => item.game == 'Пул') ) {
+              if ( price.working_times.find(item => item.name == 'MO') ) {
+                poolPricesRow['MO'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'TU') ) {
+                poolPricesRow['TU'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'WE') ) {
+                poolPricesRow['WE'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'TH') ) {
+                poolPricesRow['TH'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'FR') ) {
+                poolPricesRow['FR'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'SA') ) {
+                poolPricesRow['SA'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'SU') ) {
+                poolPricesRow['SU'] = price.value;
+              }
+            }
+
+            if ( price.tables.find(item => item.game == 'Снукер') && parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to) ) {
+              if ( price.working_times.find(item => item.name == 'MO') ) {
+                snookerPricesRow['MO'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'TU') ) {
+                snookerPricesRow['TU'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'WE') ) {
+                snookerPricesRow['WE'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'TH') ) {
+                snookerPricesRow['TH'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'FR') ) {
+                snookerPricesRow['FR'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'SA') ) {
+                snookerPricesRow['SA'] = price.value;
+              }
+              if ( price.working_times.find(item => item.name == 'SU') ) {
+                snookerPricesRow['SU'] = price.value;
+              }
+            }
+          }
+
+          russianPrices.push(russianPricesRow);
+          poolPrices.push(poolPricesRow);
+          snookerPrices.push(snookerPricesRow);
+        }
+
+        prices.russianPrices = russianPrices;
+        prices.poolPrices = poolPrices;
+        prices.snookerPrices = snookerPrices;
+
+        return prices;
+      }
     },
     photos() {
       if (this.club.photos.length) {
