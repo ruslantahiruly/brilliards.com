@@ -37,6 +37,9 @@
               <span>Закрыто</span>
             </div>
           </template>
+          <div v-if="club.works_since" class="is-size-13-mobile is-size-12-tablet is-size-12-desktop has-text-weight-light mt-3">
+            Работает с {{ club.works_since }} года
+          </div>
         </div>
       </div>
     </section>
@@ -64,27 +67,43 @@
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Цены</h2>
-              <b-tabs v-model="pricesActiveTab" size="is-medium">
-                <b-tab-item label="Русский бильярд">
-                  <b-table :data="prices.russianPrices" :columns="pricesColumnsRS" :bordered="isBordered" :mobile-cards=false></b-table>
-                </b-tab-item>
-                <b-tab-item label="Пул">
-                  <b-table :data="prices.poolPrices" :columns="pricesColumnsPL" :bordered="isBordered" :mobile-cards=false></b-table>
-                </b-tab-item>
-                <b-tab-item label="Снукер">
-                  <b-table :data="prices.snookerPrices" :columns="pricesColumnsSK" :bordered="isBordered" :mobile-cards=false></b-table>
-                </b-tab-item>
-              </b-tabs>
+              <template v-if="prices">
+                <b-tabs v-model="pricesActiveTab" size="is-medium">
+                  <template v-if="prices.games.includes('Русский бильярд')">
+                    <b-tab-item label="Русский бильярд">
+                      <b-table :data="prices.russianPrices" :columns="pricesColumnsRS" :bordered="isBordered" :mobile-cards=false></b-table>
+                    </b-tab-item>
+                  </template>
+                  <template v-if="prices.games.includes('Пул')">
+                    <b-tab-item label="Пул">
+                      <b-table :data="prices.poolPrices" :columns="pricesColumnsPL" :bordered="isBordered" :mobile-cards=false></b-table>
+                    </b-tab-item>
+                  </template>
+                  <template v-if="prices.games.includes('Снукер')">
+                    <b-tab-item label="Снукер">
+                      <b-table :data="prices.snookerPrices" :columns="pricesColumnsSK" :bordered="isBordered" :mobile-cards=false></b-table>
+                    </b-tab-item>
+                  </template>
+                </b-tabs>
+              </template>
+              <template v-else>
+                <div>Нет данных по ценам</div>
+              </template>
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Акции</h2>
-              <div class="columns">
-                <Promotion
-                  v-for="promotion in promotions"
-                  :key="promotion.id"
-                  :promotion="promotion"
-                />
-              </div>
+              <template v-if="promotions">
+                <div class="columns">
+                  <Promotion
+                    v-for="promotion in promotions"
+                    :key="promotion.id"
+                    :promotion="promotion"
+                  />
+                </div>
+              </template>
+              <template v-else>
+                <div>Нет данных по промоакциям</div>
+              </template>
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Способы оплаты</h2>
@@ -107,17 +126,22 @@
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Фото</h2>
-              <b-carousel-list
-                :data="photos"
-                :arrow=true
-                :arrow-hover=true
-                :items-to-show=1
-                :items-to-list=1
-                :repeat=true
-                :has-drag=true
-                :has-grayscale=false
-                :has-opacity=false
-              />
+              <template v-if="photos">
+                <b-carousel-list
+                  :data="photos"
+                  :arrow=true
+                  :arrow-hover=true
+                  :items-to-show=1
+                  :items-to-list=1
+                  :repeat=true
+                  :has-drag=true
+                  :has-grayscale=false
+                  :has-opacity=false
+                />
+              </template>
+              <template v-else>
+                <div>Нет фотографий</div>
+              </template>
             </section>
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Удобства и услуги</h2>
@@ -553,46 +577,48 @@ export default {
       let cues = [];
       let balls = [];
 
-      for (let i = 0; i < this.club.halls.length; i++) {
-        let hall = this.club.halls[i];
-        let hallName = this.club.halls[i].name;
+      if (this.club.halls.length) {
+        for (let i = 0; i < this.club.halls.length; i++) {
+          let hall = this.club.halls[i];
+          let hallName = this.club.halls[i].name;
 
-        for (let j = 0; j < hall.games.length; j++) {
-          let game = hall.games[j];
-          let gameName = hall.games[j].name;
-          let tablesQuantity = game.tables.length ? game.tables.length : 'нет данных';
-          let tablesSize = game.tables[0].size ? `${game.tables[0].size} футов` : 'нет данных';
-          let tablesBrand = game.tables[0].brand ? `${game.tables[0].brand}` : 'нет данных';
-          let tablesCloth = game.tables[0].cloth ? `${game.tables[0].cloth}` : 'нет данных';
-          let tablesCues = game.tables[0].cues ? `${game.tables[0].cues}` : 'нет данных';
-          let tablesBalls = game.tables[0].balls ? `${game.tables[0].balls}` : 'нет данных';
-          let gamesRow = {
-            'Game': gameName,
-            'Hall': hallName,
-            'Quantity': tablesQuantity,
-            'Size': tablesSize,
-          };
-          let tablesRow = {
-            'Game': gameName,
-            'Hall': hallName,
-            'Brand': tablesBrand,
-            'Cloth': tablesCloth,
-          };
-          let cuesRow = {
-            'Game': gameName,
-            'Hall': hallName,
-            'Brand': tablesCues,
-          };
-          let ballsRow = {
-            'Game': gameName,
-            'Hall': hallName,
-            'Brand': tablesBalls,
-          };
+          for (let j = 0; j < hall.games.length; j++) {
+            let game = hall.games[j];
+            let gameName = hall.games[j].name;
+            let tablesQuantity = game.tables.length ? game.tables.length : 'Нет данных';
+            let tablesSize = game.tables[0].size ? `${game.tables[0].size} футов` : 'Нет данных';
+            let tablesBrand = game.tables[0].brand ? `${game.tables[0].brand}` : 'Нет данных';
+            let tablesCloth = game.tables[0].cloth ? `${game.tables[0].cloth}` : 'Нет данных';
+            let tablesCues = game.tables[0].cues ? `${game.tables[0].cues}` : 'Нет данных';
+            let tablesBalls = game.tables[0].balls ? `${game.tables[0].balls}` : 'Нет данных';
+            let gamesRow = {
+              'Game': gameName,
+              'Hall': hallName,
+              'Quantity': tablesQuantity,
+              'Size': tablesSize,
+            };
+            let tablesRow = {
+              'Game': gameName,
+              'Hall': hallName,
+              'Brand': tablesBrand,
+              'Cloth': tablesCloth,
+            };
+            let cuesRow = {
+              'Game': gameName,
+              'Hall': hallName,
+              'Brand': tablesCues,
+            };
+            let ballsRow = {
+              'Game': gameName,
+              'Hall': hallName,
+              'Brand': tablesBalls,
+            };
 
-          games.push(gamesRow);
-          tables.push(tablesRow);
-          cues.push(cuesRow);
-          balls.push(ballsRow);
+            games.push(gamesRow);
+            tables.push(tablesRow);
+            cues.push(cuesRow);
+            balls.push(ballsRow);
+          }
         }
       }
 
@@ -718,6 +744,19 @@ export default {
         let russianPrices = [];
         let poolPrices = [];
         let snookerPrices = [];
+        let games = [];
+
+        for (let i = 0; i < this.club.prices.length; i++) {
+          let price = this.club.prices[i];
+          
+          for (let j = 0; j < price.tables.length; j++) {
+            let table = price.tables[j];
+
+            games.push(table.game);
+          }
+        }
+
+        games = [...new Set(games)];
 
         for (let i = 0; i < timeIntervals.length; i++) {
           let time = timeIntervals[i];
@@ -732,7 +771,7 @@ export default {
           for (let j = 0; j < this.club.prices.length; j++) {
             let price = this.club.prices[j];
 
-            if ( parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to) && price.tables.find(item => item.game == 'Русский бильярд') ) {
+            if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Русский бильярд') ) {
               if ( price.working_times.find(item => item.name == 'MO') ) {
                 russianPricesRow['MO'] = price.value;
               }
@@ -756,7 +795,7 @@ export default {
               }
             }
 
-            if ( parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to) && price.tables.find(item => item.game == 'Пул') ) {
+            if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Пул') ) {
               if ( price.working_times.find(item => item.name == 'MO') ) {
                 poolPricesRow['MO'] = price.value;
               }
@@ -780,7 +819,7 @@ export default {
               }
             }
 
-            if ( price.tables.find(item => item.game == 'Снукер') && parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to) ) {
+            if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Снукер') ) {
               if ( price.working_times.find(item => item.name == 'MO') ) {
                 snookerPricesRow['MO'] = price.value;
               }
@@ -813,6 +852,7 @@ export default {
         prices.russianPrices = russianPrices;
         prices.poolPrices = poolPrices;
         prices.snookerPrices = snookerPrices;
+        prices.games = games;
 
         return prices;
       }
@@ -911,7 +951,7 @@ export default {
       let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
       let date = new Date();
       let currentDay = date.getUTCDay();
-      let currentTimeHours = date.getUTCHours() + 3;
+      let currentTimeHours = date.getUTCHours() + this.club.time_zone;
 
       if (currentTimeHours > 23) {
         currentTimeHours = currentTimeHours - 24;
