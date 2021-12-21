@@ -951,7 +951,7 @@ export default {
       let weekDays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
       let date = new Date();
       let currentDay = date.getUTCDay();
-      let currentTimeHours = date.getUTCHours() + this.club.time_zone;
+      let currentTimeHours = date.getUTCHours() + parseInt(this.club.time_zone);
 
       if (currentTimeHours > 23) {
         currentTimeHours = currentTimeHours - 24;
