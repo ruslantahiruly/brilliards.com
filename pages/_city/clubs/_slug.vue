@@ -531,6 +531,10 @@ export default {
         for (let i = 0; i < this.club.halls.length; i++) {
           let hall = this.club.halls[i];
           let hallType = this.club.halls[i].type;
+          if (this.club.halls[i].name) {
+            let hallName = this.club.halls[i].name;
+            hallType = `${hallType}, ${hallName}`;
+          }
 
           for (let j = 0; j < hall.games.length; j++) {
             let game = hall.games[j];
