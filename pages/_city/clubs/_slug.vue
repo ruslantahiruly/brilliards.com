@@ -78,46 +78,26 @@
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Цены</h2>
               <template v-if="prices">
-                <template v-if="prices.halls.includes('Общий')">
-                  <h3 class="title is-size-10-mobile is-size-10-tablet is-size-9-desktop has-text-weight-light has-text-left pb-4">Общий зал</h3>
-                  <b-tabs v-model="pricesActiveTab" size="is-medium">
-                    <template v-if="prices.games.includes('Русский бильярд')">
+                <div v-for="price in prices" :key="price.id" class="mb-5">
+                  <h3 class="title is-size-10-mobile is-size-10-tablet is-size-9-desktop has-text-weight-light has-text-left pb-3 mb-0">{{ price.type }} зал {{ price.name }}</h3>
+                  <b-tabs v-model="price.pricesActiveTab" size="is-medium">
+                    <template v-if="price.russianPrices.length > 0">
                       <b-tab-item label="Русский бильярд">
-                        <b-table :data="prices.russianPrices" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
+                        <b-table :data="price.russianPrices" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
                       </b-tab-item>
                     </template>
-                    <template v-if="prices.games.includes('Пул')">
+                    <template v-if="price.poolPrices.length > 0">
                       <b-tab-item label="Пул">
-                        <b-table :data="prices.poolPrices" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
+                        <b-table :data="price.poolPrices" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
                       </b-tab-item>
                     </template>
-                    <template v-if="prices.games.includes('Снукер')">
+                    <template v-if="price.snookerPrices.length > 0">
                       <b-tab-item label="Снукер">
-                        <b-table :data="prices.snookerPrices" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
+                        <b-table :data="price.snookerPrices" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
                       </b-tab-item>
                     </template>
                   </b-tabs>
-                </template>
-                <template v-if="prices.halls.includes('VIP')">
-                  <h3 class="title is-size-10-mobile is-size-10-tablet is-size-9-desktop has-text-weight-light has-text-left pb-4">VIP-зал</h3>
-                  <b-tabs v-model="pricesVIPActiveTab" size="is-medium">
-                    <template v-if="prices.gamesVIP.includes('Русский бильярд')">
-                      <b-tab-item label="Русский бильярд">
-                        <b-table :data="prices.russianPricesVIP" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
-                      </b-tab-item>
-                    </template>
-                    <template v-if="prices.gamesVIP.includes('Пул')">
-                      <b-tab-item label="Пул">
-                        <b-table :data="prices.poolPricesVIP" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
-                      </b-tab-item>
-                    </template>
-                    <template v-if="prices.gamesVIP.includes('Снукер')">
-                      <b-tab-item label="Снукер">
-                        <b-table :data="prices.snookerPricesVIP" :columns="pricesColumns" :bordered="isBordered" :mobile-cards=false></b-table>
-                      </b-tab-item>
-                    </template>
-                  </b-tabs>
-                </template>
+                </div>
               </template>
               <template v-else>
                 <div>Нет данных по ценам</div>
@@ -491,8 +471,6 @@ export default {
         },
       ],
       equipmentActiveTab: 0,
-      pricesActiveTab: 0,
-      pricesVIPActiveTab: 0,
       isBordered: true,
     };
   },
@@ -694,244 +672,147 @@ export default {
         }
 
         // Populating table 'td's with prices' values
-        let prices = {};
-
-        let russianPrices = [];
-        let poolPrices = [];
-        let snookerPrices = [];
-
-        let russianPricesVIP = [];
-        let poolPricesVIP = [];
-        let snookerPricesVIP = [];
-
-        let games = [];
-        let gamesVIP = [];
+        let prices = [];
         let halls = [];
 
+        // Generating list of halls
         for (let i = 0; i < this.club.prices.length; i++) {
           let price = this.club.prices[i];
-          
+
           for (let j = 0; j < price.tables.length; j++) {
             let table = price.tables[j];
 
-            if (table.hall == 'Общий') {
-              games.push(table.game);
-            }
+            halls.push({
+              id: table.hall.id,
+              type: table.hall.type,
+              name: table.hall.name,
+            });
           }
         }
 
-        games = [...new Set(games)];
+        halls = halls.filter((item, index, self) =>
+          index === self.findIndex((t) => (
+            t.id === item.id
+          ))
+        )
 
-        for (let i = 0; i < this.club.prices.length; i++) {
-          let price = this.club.prices[i];
-          
-          for (let j = 0; j < price.tables.length; j++) {
-            let table = price.tables[j];
+        // Generating tables of prices
+        for (let i = 0; i < halls.length; i++) {
+          let hall = halls[i];
 
-            if (table.hall == 'VIP') {
-              gamesVIP.push(table.game);
-            }
-          }
-        }
+          let russianPrices = [];
+          let poolPrices = [];
+          let snookerPrices = [];
 
-        gamesVIP = [...new Set(gamesVIP)];
+          for (let j = 0; j < timeIntervals.length; j++) {
+            let time = timeIntervals[j];
+            let times = timeIntervals[j].split(' – ');
+            let timeFrom = times[0];
+            let timeTo = times[1];
 
-        for (let i = 0; i < this.club.prices.length; i++) {
-          let price = this.club.prices[i];
-          
-          for (let j = 0; j < price.tables.length; j++) {
-            let table = price.tables[j];
+            let russianPricesRow = { 'Time': time, };
+            let poolPricesRow = { 'Time': time, };
+            let snookerPricesRow = { 'Time': time, };
 
-            halls.push(table.hall);
-          }
-        }
+            for (let k = 0; k < this.club.prices.length; k++) {
+              let price = this.club.prices[k];
 
-        halls = [...new Set(halls)];
+              if (price.tables.find(item => item.hall.id == hall.id)) {
+                if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Русский бильярд') ) {
+                  if ( price.working_times.find(item => item.name == 'MO') ) {
+                    russianPricesRow['MO'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'TU') ) {
+                    russianPricesRow['TU'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'WE') ) {
+                    russianPricesRow['WE'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'TH') ) {
+                    russianPricesRow['TH'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'FR') ) {
+                    russianPricesRow['FR'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'SA') ) {
+                    russianPricesRow['SA'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'SU') ) {
+                    russianPricesRow['SU'] = price.value;
+                  }
+                }
 
-        for (let i = 0; i < timeIntervals.length; i++) {
-          let time = timeIntervals[i];
-          let times = timeIntervals[i].split(' – ');
-          let timeFrom = times[0];
-          let timeTo = times[1];
+                if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Пул') ) {
+                  if ( price.working_times.find(item => item.name == 'MO') ) {
+                    poolPricesRow['MO'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'TU') ) {
+                    poolPricesRow['TU'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'WE') ) {
+                    poolPricesRow['WE'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'TH') ) {
+                    poolPricesRow['TH'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'FR') ) {
+                    poolPricesRow['FR'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'SA') ) {
+                    poolPricesRow['SA'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'SU') ) {
+                    poolPricesRow['SU'] = price.value;
+                  }
+                }
 
-          let russianPricesRow = { 'Time': time, };
-          let poolPricesRow = { 'Time': time, };
-          let snookerPricesRow = { 'Time': time, };
-
-          let russianPricesRowVIP = { 'Time': time, };
-          let poolPricesRowVIP = { 'Time': time, };
-          let snookerPricesRowVIP = { 'Time': time, };
-
-          for (let j = 0; j < this.club.prices.length; j++) {
-            let price = this.club.prices[j];
-
-            if (price.tables.find(item => item.hall == 'Общий')) {
-              if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Русский бильярд') ) {
-                if ( price.working_times.find(item => item.name == 'MO') ) {
-                  russianPricesRow['MO'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TU') ) {
-                  russianPricesRow['TU'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'WE') ) {
-                  russianPricesRow['WE'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TH') ) {
-                  russianPricesRow['TH'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'FR') ) {
-                  russianPricesRow['FR'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SA') ) {
-                  russianPricesRow['SA'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SU') ) {
-                  russianPricesRow['SU'] = price.value;
-                }
-              }
-
-              if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Пул') ) {
-                if ( price.working_times.find(item => item.name == 'MO') ) {
-                  poolPricesRow['MO'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TU') ) {
-                  poolPricesRow['TU'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'WE') ) {
-                  poolPricesRow['WE'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TH') ) {
-                  poolPricesRow['TH'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'FR') ) {
-                  poolPricesRow['FR'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SA') ) {
-                  poolPricesRow['SA'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SU') ) {
-                  poolPricesRow['SU'] = price.value;
-                }
-              }
-
-              if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Снукер') ) {
-                if ( price.working_times.find(item => item.name == 'MO') ) {
-                  snookerPricesRow['MO'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TU') ) {
-                  snookerPricesRow['TU'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'WE') ) {
-                  snookerPricesRow['WE'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TH') ) {
-                  snookerPricesRow['TH'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'FR') ) {
-                  snookerPricesRow['FR'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SA') ) {
-                  snookerPricesRow['SA'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SU') ) {
-                  snookerPricesRow['SU'] = price.value;
+                if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Снукер') ) {
+                  if ( price.working_times.find(item => item.name == 'MO') ) {
+                    snookerPricesRow['MO'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'TU') ) {
+                    snookerPricesRow['TU'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'WE') ) {
+                    snookerPricesRow['WE'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'TH') ) {
+                    snookerPricesRow['TH'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'FR') ) {
+                    snookerPricesRow['FR'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'SA') ) {
+                    snookerPricesRow['SA'] = price.value;
+                  }
+                  if ( price.working_times.find(item => item.name == 'SU') ) {
+                    snookerPricesRow['SU'] = price.value;
+                  }
                 }
               }
             }
-            
-            if (price.tables.find(item => item.hall == 'VIP')) {
-              if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Русский бильярд') ) {
-                if ( price.working_times.find(item => item.name == 'MO') ) {
-                  russianPricesRowVIP['MO'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TU') ) {
-                  russianPricesRowVIP['TU'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'WE') ) {
-                  russianPricesRowVIP['WE'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TH') ) {
-                  russianPricesRowVIP['TH'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'FR') ) {
-                  russianPricesRowVIP['FR'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SA') ) {
-                  russianPricesRowVIP['SA'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SU') ) {
-                  russianPricesRowVIP['SU'] = price.value;
-                }
-              }
 
-              if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Пул') ) {
-                if ( price.working_times.find(item => item.name == 'MO') ) {
-                  poolPricesRowVIP['MO'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TU') ) {
-                  poolPricesRowVIP['TU'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'WE') ) {
-                  poolPricesRowVIP['WE'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TH') ) {
-                  poolPricesRowVIP['TH'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'FR') ) {
-                  poolPricesRowVIP['FR'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SA') ) {
-                  poolPricesRowVIP['SA'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SU') ) {
-                  poolPricesRowVIP['SU'] = price.value;
-                }
-              }
-
-              if ( (parseInt(timeFrom) == parseInt(price.price_from) || parseInt(timeTo) == parseInt(price.price_to)) && price.tables.find(item => item.game == 'Снукер') ) {
-                if ( price.working_times.find(item => item.name == 'MO') ) {
-                  snookerPricesRowVIP['MO'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TU') ) {
-                  snookerPricesRowVIP['TU'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'WE') ) {
-                  snookerPricesRowVIP['WE'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'TH') ) {
-                  snookerPricesRowVIP['TH'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'FR') ) {
-                  snookerPricesRowVIP['FR'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SA') ) {
-                  snookerPricesRowVIP['SA'] = price.value;
-                }
-                if ( price.working_times.find(item => item.name == 'SU') ) {
-                  snookerPricesRowVIP['SU'] = price.value;
-                }
-              }
+            if (Object.keys(russianPricesRow).length > 1) {
+              russianPrices.push(russianPricesRow);
+            }
+            if (Object.keys(poolPricesRow).length > 1) {
+              poolPrices.push(poolPricesRow);
+            }
+            if (Object.keys(snookerPricesRow).length > 1) {
+              snookerPrices.push(snookerPricesRow);
             }
           }
 
-          russianPrices.push(russianPricesRow);
-          poolPrices.push(poolPricesRow);
-          snookerPrices.push(snookerPricesRow);
-
-          russianPricesVIP.push(russianPricesRowVIP);
-          poolPricesVIP.push(poolPricesRowVIP);
-          snookerPricesVIP.push(snookerPricesRowVIP);
+          prices.push({
+            pricesActiveTab: 0,
+            id: hall.id,
+            type: hall.type,
+            name: hall.name,
+            russianPrices,
+            poolPrices,
+            snookerPrices,
+          });
         }
-
-        prices.russianPrices = russianPrices;
-        prices.poolPrices = poolPrices;
-        prices.snookerPrices = snookerPrices;
-        prices.russianPricesVIP = russianPricesVIP;
-        prices.poolPricesVIP = poolPricesVIP;
-        prices.snookerPricesVIP = snookerPricesVIP;
-        prices.games = games;
-        prices.gamesVIP = gamesVIP;
-        prices.halls = halls;
 
         return prices;
       }
