@@ -30,6 +30,12 @@
                 <span class="has-text-weight-light">Вход только в медицинских масках</span>
               </div>
             </div>
+            <div v-if="club.is_qr_code" class="mt-2">
+              <div class="icon-text is-size-13-mobile is-size-12-tablet is-size-12-desktop">
+                <b-icon pack="fas" icon="exclamation-triangle" type="is-warning" size="is-small"></b-icon>
+                <span class="has-text-weight-light">Вход по QR-коду</span>
+              </div>
+            </div>
           </template>
           <template v-else>
             <div class="button is-static is-danger is-size-13-mobile is-size-12-tablet is-size-12-desktop is-outlined is-rounded">
@@ -233,30 +239,38 @@
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left-mobile has-text-centered mb-4 pb-3">Контакты</h2>
               <div class="media">
                 <div class="media-left mr-2">
-                  <b-icon pack="fas" icon="map-marker-alt" type="is-info" class="mt-1"></b-icon>
+                  <b-icon pack="fas" icon="map-marker-alt" type="is-info"></b-icon>
                 </div>
                 <div class="media-content">
-                  <div class="is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-weight-light mb-2">Адрес</div>
-                  <div class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-weight-light">{{ club.address }}</div>
+                  <div class="is-size-12-mobile is-size-12-tablet is-size-11-desktop has-text-grey has-text-weight-light mb-2">Адрес</div>
+                  <div class="is-size-10-mobile is-size-10-tablet is-size-10-desktop has-text-weight-light">{{ club.address }}</div>
+                  <div v-if="club.floor" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">
+                    <span>{{ club.floor }} этаж</span>
+                    <template v-if="club.entrance">
+                      <span class="dot"></span><span>вход с {{ club.entrance }}</span>
+                    </template>
+                  </div>
+                  <div v-if="club.district" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">Район: {{ club.district }}</div>
+                  <div v-if="club.metro" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">Метро: {{ club.metro }}</div>
                 </div>
               </div>
               <div class="media">
                 <div class="media-left mr-2">
-                  <b-icon pack="fas" icon="phone-alt" type="is-info" class="mt-1"></b-icon>
+                  <b-icon pack="fas" icon="phone-alt" type="is-info"></b-icon>
                 </div>
                 <div class="media-content">
-                  <div class="is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-weight-light mb-2">Телефон</div>
-                  <div class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-weight-light">{{ club.phone }}</div>
+                  <div class="is-size-12-mobile is-size-12-tablet is-size-11-desktop has-text-grey has-text-weight-light mb-2">Телефон</div>
+                  <div class="is-size-10-mobile is-size-10-tablet is-size-10-desktop has-text-weight-light">{{ club.phone }}</div>
                 </div>
               </div>
               <div class="media">
                 <div class="media-left mr-2">
-                  <b-icon pack="fas" icon="clock" type="is-info" class="mt-1"></b-icon>
+                  <b-icon pack="fas" icon="clock" type="is-info"></b-icon>
                 </div>
                 <div class="media-content">
-                  <div class="is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-weight-light mb-2">Время работы</div>
+                  <div class="is-size-12-mobile is-size-12-tablet is-size-11-desktop has-text-grey has-text-weight-light mb-2">Время работы</div>
                   <b-tooltip position="is-bottom" type="is-light" :triggers="['click']" :auto-close="['outside', 'escape']">
-                    <div class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-weight-light is-clickable">
+                    <div class="is-size-10-mobile is-size-10-tablet is-size-10-desktop has-text-weight-light is-clickable">
                       <template v-if="thisDay.is24Hours">
                         <div class="icon-text">
                           <span>Круглосуточно</span>

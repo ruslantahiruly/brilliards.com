@@ -27,7 +27,11 @@
               <span class="is-size-12-mobile is-size-12-tablet is-size-12-desktop">
                 с {{ promotion.timeFrom }} до {{ promotion.timeTo }}
                 <template v-if="promotion.daysOfTheWeek.length == 7">каждый день</template>
-                <template v-else>Нет</template>
+                <template v-else>
+                  <span v-for="day in promotion.daysOfTheWeek" :key="day.id">
+                    <span>{{ day }}</span><span v-if="promotion.daysOfTheWeek.indexOf(customer) !== promotion.daysOfTheWeek.length - 1" class="dot"></span>
+                  </span>
+                </template>
               </span>
             </template>
             <template v-else>
