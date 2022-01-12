@@ -13,7 +13,7 @@
             <b-icon pack="fas" icon="user-friends" type="is-success"></b-icon>
             <span class="is-size-12-mobile is-size-12-tablet is-size-12-desktop">
               <span v-for="customer in promotion.customerCategories" :key="customer.id">
-                <span>{{ customer }}</span><span v-if="promotion.customerCategories.indexOf(customer) !== promotion.customerCategories.length - 1" class="dot"></span>
+                <span>{{ customer }}</span><span v-if="promotion.customerCategories.indexOf(customer) !== promotion.customerCategories.length - 1" class="dot has-background-success"></span>
               </span>
             </span>
           </div>
@@ -29,7 +29,7 @@
                 <template v-if="promotion.daysOfTheWeek.length == 7">каждый день</template>
                 <template v-else>
                   <span v-for="day in promotion.daysOfTheWeek" :key="day.id">
-                    <span>{{ day }}</span><span v-if="promotion.daysOfTheWeek.indexOf(customer) !== promotion.daysOfTheWeek.length - 1" class="dot"></span>
+                    <span>{{ day }}</span><span v-if="promotion.daysOfTheWeek.indexOf(day) !== promotion.daysOfTheWeek.length - 1" class="dot has-background-success"></span>
                   </span>
                 </template>
               </span>

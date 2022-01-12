@@ -79,7 +79,7 @@ export default {
     imports: [
       {
         set: '@fortawesome/free-solid-svg-icons',
-        icons: ['faLocationArrow', 'faMapMarkerAlt', 'faWifi', 'faTv', 'faUtensils', 'faGlassWhiskey', 'faUserShield', 'faSmoking', 'faFan', 'faRestroom', 'faParking', 'faHatCowboy', 'faPhoneAlt', 'faClock', 'faArrowUp', 'faAngleLeft', 'faAngleRight', 'faGlobe', 'faBookOpen', 'faWallet', 'faCreditCard', 'faTag', 'faUserFriends', 'faChevronDown', 'faExclamationTriangle', 'faPercent']
+        icons: ['faLocationArrow', 'faMapMarkerAlt', 'faWifi', 'faTv', 'faUtensils', 'faGlassWhiskey', 'faUserShield', 'faSmoking', 'faFan', 'faRestroom', 'faParking', 'faHatCowboy', 'faPhoneAlt', 'faClock', 'faArrowUp', 'faAngleLeft', 'faAngleRight', 'faGlobe', 'faBookOpen', 'faWallet', 'faCreditCard', 'faTag', 'faUserFriends', 'faChevronDown', 'faExclamationTriangle', 'faPercent', 'faCheck', 'faTimes']
       },
       {
         set: '@fortawesome/free-brands-svg-icons',

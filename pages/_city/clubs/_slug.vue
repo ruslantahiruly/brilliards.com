@@ -110,6 +110,86 @@
               </template>
             </section>
             <section class="mb-6">
+              <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Сервис</h2>
+              <div class="columns is-variable is-0-mobile is-mobile is-multiline">
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                  <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Турниры</div>
+                  <template v-if="club.tournaments">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
+                      <span>Есть</span>
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
+                      <span>Нет</span>
+                    </span>
+                  </template>
+                </div>
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                  <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Школа бильярда</div>
+                  <template v-if="club.school">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
+                      <span>Есть</span>
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
+                      <span>Нет</span>
+                    </span>
+                  </template>
+                </div>
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                  <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Магазин оборудования и аксессуаров</div>
+                  <template v-if="club.shop">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
+                      <span>Есть</span>
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
+                      <span>Нет</span>
+                    </span>
+                  </template>
+                </div>
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                  <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Мастерская по ремонту киев</div>
+                  <template v-if="club.repair">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
+                      <span>Есть</span>
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
+                      <span>Нет</span>
+                    </span>
+                  </template>
+                </div>
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                  <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Шкафчики для киев</div>
+                  <template v-if="club.cues_lockers">
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
+                      <span>Есть</span>
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="icon-text">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
+                      <span>Нет</span>
+                    </span>
+                  </template>
+                </div>
+              </div>
+            </section>
+            <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Акции</h2>
               <template v-if="promotions">
                 <div class="columns">
@@ -247,7 +327,7 @@
                   <div v-if="club.floor" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">
                     <span>{{ club.floor }} этаж</span>
                     <template v-if="club.entrance">
-                      <span class="dot"></span><span>вход с {{ club.entrance }}</span>
+                      <span class="dot has-background-info"></span><span>вход с {{ club.entrance }}</span>
                     </template>
                   </div>
                   <div v-if="club.district" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">Район: {{ club.district }}</div>
@@ -306,9 +386,9 @@
               <div class="media">
                 <div class="media-content">
                   <div class="is-size-11-mobile is-size-11-tablet is-size-9-desktop has-text-weight-light mb-2">Социальные сети</div>
-                  <div class="columns is-variable is-0-mobile is-mobile">
+                  <div class="columns is-variable is-3-mobile is-mobile">
                     <template v-if="socials || club.website">
-                      <div class="column" v-for="social in socials" :key="social.id">
+                      <div class="column is-narrow" v-for="social in socials" :key="social.id">
                         <template v-if="social.name === 'IN'">
                           <a :href="social.address" title="Instagram" rel="nofollow" target="_blank">
                             <b-icon pack="fab" icon="instagram" type="is-info" size="is-medium"></b-icon>
