@@ -25,7 +25,7 @@
             <b-icon pack="fas" icon="clock" type="is-success"></b-icon>
             <template v-if="promotion.timeFrom">
               <span class="is-size-12-mobile is-size-12-tablet is-size-12-desktop">
-                с {{ promotion.timeFrom }} до {{ promotion.timeTo }}
+                с {{ promotion.timeFrom }} до {{ promotion.timeTo }} |
                 <template v-if="promotion.daysOfTheWeek.length == 7">каждый день</template>
                 <template v-else>
                   <span v-for="day in promotion.daysOfTheWeek" :key="day.id">

@@ -324,11 +324,12 @@
                 <div class="media-content">
                   <div class="is-size-12-mobile is-size-12-tablet is-size-11-desktop has-text-grey has-text-weight-light mb-2">Адрес</div>
                   <div class="is-size-10-mobile is-size-10-tablet is-size-10-desktop has-text-weight-light">{{ club.address }}</div>
-                  <div v-if="club.floor" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">
-                    <span>{{ club.floor }} этаж</span>
-                    <template v-if="club.entrance">
-                      <span class="dot has-background-info"></span><span>вход с {{ club.entrance }}</span>
-                    </template>
+                  <div v-if="club.house || club.floor || club.entrance" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">
+                    <template v-if="club.house">{{ club.house }}</template>
+                    <template v-if="club.floor && club.house"><span class="dot has-background-info"></span>{{ club.floor }} этаж</template>
+                    <template v-else-if="club.floor">{{ club.floor }} этаж</template>
+                    <template v-if="club.entrance && club.house || club.floor"><span class="dot has-background-info"></span>вход с {{ club.entrance }}</template>
+                    <template v-else-if="club.entrance">вход с {{ club.entrance }}</template>
                   </div>
                   <div v-if="club.district" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">Район: {{ club.district }}</div>
                   <div v-if="club.metro" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">Метро: {{ club.metro }}</div>
