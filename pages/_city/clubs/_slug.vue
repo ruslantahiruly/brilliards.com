@@ -612,7 +612,7 @@ export default {
           for (let j = 0; j < hall.games.length; j++) {
             let game = hall.games[j];
             let gameName = hall.games[j].name;
-            if (game.tables[0].quantity) {
+            if (game.tables[0].quantity > 1) {
               let tablesQuantity = game.tables[0].quantity;
             } else {
               let tablesQuantity = game.tables.length ? game.tables.length : 'Нет данных';
