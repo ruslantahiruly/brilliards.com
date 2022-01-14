@@ -612,10 +612,11 @@ export default {
           for (let j = 0; j < hall.games.length; j++) {
             let game = hall.games[j];
             let gameName = hall.games[j].name;
+            let tablesQuantity = null;
             if (game.tables[0].quantity > 1) {
-              let tablesQuantity = game.tables[0].quantity;
+              tablesQuantity = game.tables[0].quantity;
             } else {
-              let tablesQuantity = game.tables.length ? game.tables.length : 'Нет данных';
+              tablesQuantity = game.tables.length ? game.tables.length : 'Нет данных';
             }
             let tablesSize = game.tables[0].size ? `${game.tables[0].size} футов` : 'Нет данных';
             let tablesBrand = game.tables[0].brand ? `${game.tables[0].brand}` : 'Нет данных';
