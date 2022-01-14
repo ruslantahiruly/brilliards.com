@@ -328,7 +328,7 @@
                     <template v-if="club.house">{{ club.house }}</template>
                     <template v-if="club.floor && club.house"><span class="dot has-background-info"></span>{{ club.floor }} этаж</template>
                     <template v-else-if="club.floor">{{ club.floor }} этаж</template>
-                    <template v-if="club.entrance && club.house || club.floor"><span class="dot has-background-info"></span>вход с {{ club.entrance }}</template>
+                    <template v-if="club.entrance && (club.house || club.floor)"><span class="dot has-background-info"></span>вход с {{ club.entrance }}</template>
                     <template v-else-if="club.entrance">вход с {{ club.entrance }}</template>
                   </div>
                   <div v-if="club.district" class="is-size-12-mobile is-size-12-tablet is-size-12-desktop has-text-grey has-text-weight-light">Район: {{ club.district }}</div>
@@ -612,7 +612,11 @@ export default {
           for (let j = 0; j < hall.games.length; j++) {
             let game = hall.games[j];
             let gameName = hall.games[j].name;
-            let tablesQuantity = game.tables.length ? game.tables.length : 'Нет данных';
+            if (game.tables[0].quantity) {
+              let tablesQuantity = game.tables[0].quantity;
+            } else {
+              let tablesQuantity = game.tables.length ? game.tables.length : 'Нет данных';
+            }
             let tablesSize = game.tables[0].size ? `${game.tables[0].size} футов` : 'Нет данных';
             let tablesBrand = game.tables[0].brand ? `${game.tables[0].brand}` : 'Нет данных';
             let tablesCloth = game.tables[0].cloth ? `${game.tables[0].cloth}` : 'Нет данных';
