@@ -112,78 +112,78 @@
             <section class="mb-6">
               <h2 class="title is-size-8-mobile is-size-8-tablet is-size-7-desktop has-text-weight-light has-text-left pb-4">Сервис</h2>
               <div class="columns is-variable is-0-mobile is-mobile is-multiline">
-                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered is-flex is-flex-direction-column is-justify-content-space-between is-align-items-center">
                   <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Турниры</div>
                   <template v-if="club.tournaments">
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
-                      <span>Есть</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-small"></b-icon>
+                      <span class="has-text-grey">Есть</span>
                     </span>
                   </template>
                   <template v-else>
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
-                      <span>Нет</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-small"></b-icon>
+                      <span class="has-text-grey">Нет</span>
                     </span>
                   </template>
                 </div>
-                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered is-flex is-flex-direction-column is-justify-content-space-between is-align-items-center">
                   <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Школа бильярда</div>
                   <template v-if="club.school">
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
-                      <span>Есть</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-small"></b-icon>
+                      <span class="has-text-grey">Есть</span>
                     </span>
                   </template>
                   <template v-else>
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
-                      <span>Нет</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-small"></b-icon>
+                      <span class="has-text-grey">Нет</span>
                     </span>
                   </template>
                 </div>
-                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered is-flex is-flex-direction-column is-justify-content-space-between is-align-items-center">
                   <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Магазин оборудования и аксессуаров</div>
                   <template v-if="club.shop">
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
-                      <span>Есть</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-small"></b-icon>
+                      <span class="has-text-grey">Есть</span>
                     </span>
                   </template>
                   <template v-else>
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
-                      <span>Нет</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-small"></b-icon>
+                      <span class="has-text-grey">Нет</span>
                     </span>
                   </template>
                 </div>
-                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered is-flex is-flex-direction-column is-justify-content-space-between is-align-items-center">
                   <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Мастерская по ремонту киев</div>
                   <template v-if="club.repair">
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
-                      <span>Есть</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-small"></b-icon>
+                      <span class="has-text-grey">Есть</span>
                     </span>
                   </template>
                   <template v-else>
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
-                      <span>Нет</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-small"></b-icon>
+                      <span class="has-text-grey">Нет</span>
                     </span>
                   </template>
                 </div>
-                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered">
+                <div class="column is-half-mobile is-one-quarter-tablet is-one-fifth-desktop has-text-centered is-flex is-flex-direction-column is-justify-content-space-between is-align-items-center">
                   <div class="is-size-13-mobile is-size-13-tablet is-size-13-desktop mt-2 has-text-black">Шкафчики для киев</div>
                   <template v-if="club.cues_lockers">
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="check" type="is-success" size="is-medium"></b-icon>
-                      <span>Есть</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="check" type="is-success" size="is-small"></b-icon>
+                      <span class="has-text-grey">Есть</span>
                     </span>
                   </template>
                   <template v-else>
-                    <span class="icon-text">
-                      <b-icon pack="fas" icon="times" type="is-danger" size="is-medium"></b-icon>
-                      <span>Нет</span>
+                    <span class="icon-text mr-2">
+                      <b-icon pack="fas" icon="times" type="is-danger" size="is-small"></b-icon>
+                      <span class="has-text-grey">Нет</span>
                     </span>
                   </template>
                 </div>
